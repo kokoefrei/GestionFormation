@@ -6,6 +6,7 @@ import java.util.ArrayList;
 
 import org.junit.Test;
 
+import junit.framework.AssertionFailedError;
 import model.Command;
 import model.Login;
 import model.Person;
@@ -20,14 +21,14 @@ public class StoreTest {
 	@Test
 	public final void testAddProduct(){
 		
-		Command cart = Command.getCommandInstance();
+		Command command = Command.getCommandInstance();
 		
 		Product productBanana = new Product("Banana");
 		ArrayList<Product> products = new ArrayList<Product>();
 		products.add(productBanana);
 		
 		StoreFactory storeFactory = new StoreFactory();
-		Store unionStore = storeFactory.createStore("Union", cart, products);
+		Store unionStore = storeFactory.createStore("Union", command, products);
 		
 		int nbProductBefore = unionStore.getAvailableProducts().get(productBanana.getName());
 		unionStore.addProduct(productBanana);
@@ -41,23 +42,25 @@ public class StoreTest {
 		
 		System.out.println("StoreTest - testAddProduct: OK");
 		
+		//assertFalse("StoreTest - testAddProduct KO: product not added", nbProductBefore + 1 != nbProductAfter);
+		
 	}
 	
 	@Test
 	public final void testRemoveProduct(){
 		
-		Command cart = Command.getCommandInstance();
+		Command command = Command.getCommandInstance();
 		
-		Product productBanana = new Product("Banana");
+		Product productComputer = new Product("Computer");
 		ArrayList<Product> products = new ArrayList<Product>();
-		products.add(productBanana);
+		products.add(productComputer);
 		
 		StoreFactory storeFactory = new StoreFactory();
-		Store unionStore = storeFactory.createStore("Union", cart, products);
+		Store englandStore = storeFactory.createStore("England", command, products);
 		
-		int nbProductBefore = unionStore.getAvailableProducts().get(productBanana.getName());
-		unionStore.removeProduct(productBanana);
-		int nbProductAfter = unionStore.getAvailableProducts().get(productBanana.getName());
+		int nbProductBefore = englandStore.getAvailableProducts().get(productComputer.getName());
+		englandStore.removeProduct(productComputer);
+		int nbProductAfter = englandStore.getAvailableProducts().get(productComputer.getName());
 		
 		if (nbProductBefore - 1 != nbProductAfter){
 			System.out.println("nbProductBefore: " + nbProductBefore);
@@ -70,69 +73,72 @@ public class StoreTest {
 	}
 
 	@Test
-	public final void testRemoveProductCart(){
+	public final void testRemoveProductCommand(){
 		
-		Command cart = Command.getCommandInstance();
+		Command command = Command.getCommandInstance();
 		
-		Product productBanana = new Product("Banana");
+		Product productComputer = new Product("Computer");
 		ArrayList<Product> products = new ArrayList<Product>();
-		products.add(productBanana);
+		products.add(productComputer);
 		
 		StoreFactory storeFactory = new StoreFactory();
-		Store unionStore = storeFactory.createStore("Union", cart, products);
+		Store englandStore = storeFactory.createStore("England", command, products);
 		
-		unionStore.addProductCart(productBanana);
+		englandStore.addProductCommand(productComputer);
+		englandStore.addProductCommand(productComputer);
 		
-		int nbProductBefore = unionStore.getCommand().getListProducts().get(productBanana.getName());
-		unionStore.removeProductCommand(productBanana);
-		int nbProductAfter = unionStore.getCommand().getListProducts().get(productBanana.getName());
+		int nbProductBefore = englandStore.getCommand().getListProducts().get(productComputer.getName());
+		englandStore.removeProductCommand(productComputer);
+		int nbProductAfter = englandStore.getCommand().getListProducts().get(productComputer.getName());
 		
 		if (nbProductBefore - 1 != nbProductAfter){			
 			System.out.println("nbProductBefore: " + nbProductBefore);
 			System.out.println("nbProductAfter: " + nbProductAfter);
-			fail("StoreTest - testRemoveProductCart KO: product not removed");
+			fail("StoreTest - testRemoveProductCommand KO: product not removed");
 		}
 		
-		System.out.println("StoreTest - testRemoveProductCart: OK");
+		System.out.println("StoreTest - testRemoveProductCommand: OK");
 	}
 	
 	@Test
-	public final void testAddProductCart(){
+	public final void testAddProductCommand(){
 		
-		Command cart = Command.getCommandInstance();
+		Command command = Command.getCommandInstance();
 		
-		Product productBanana = new Product("Banana");
+		Product productComputer = new Product("Computer");
 		ArrayList<Product> products = new ArrayList<Product>();
-		products.add(productBanana);
+		products.add(productComputer);
 		
 		StoreFactory storeFactory = new StoreFactory();
-		Store unionStore = storeFactory.createStore("Union", cart, products);
+		Store englandStore = storeFactory.createStore("England", command, products);
 		
 		
 		
-		int nbProductBefore = unionStore.getCommand().getListProducts().get(productBanana.getName());
-		unionStore.addProductCart(productBanana);
-		int nbProductAfter = unionStore.getCommand().getListProducts().get(productBanana.getName());
+		int nbProductBefore = englandStore.getCommand().getListProducts().get(productComputer.getName());
+		englandStore.addProductCommand(productComputer);
+		int nbProductAfter = englandStore.getCommand().getListProducts().get(productComputer.getName());
 		
 		if (nbProductBefore + 1 != nbProductAfter){			
 			System.out.println("nbProductBefore: " + nbProductBefore);
 			System.out.println("nbProductAfter: " + nbProductAfter);
-			fail("StoreTest - testAddProductCart KO: product not removed");
+			fail("StoreTest - testAddProductCommand KO: product not removed");
+		}
+		else{
+			System.out.println("StoreTest - testAddProductCommand: OK");
 		}
 		
-		System.out.println("StoreTest - testAddProductCart: OK");
 	}
 	
 	@Test
 	public final void testAddPerson(){
 		
-		Command cart = Command.getCommandInstance();
+		Command command = Command.getCommandInstance();
 		
-		Product productBanana = new Product("Banana");
+		Product productComputer = new Product("Computer");
 		ArrayList<Product> products = new ArrayList<Product>();
 		
 		StoreFactory storeFactory = new StoreFactory();
-		Store unionStore = storeFactory.createStore("Union", cart, products);
+		Store englandStore = storeFactory.createStore("England", command, products);
 		
 		PersonFactory personFactory = new PersonFactory();
 		Person admin = personFactory.createPerson("admin", "test@test.com", new Login("root", "root"));
@@ -142,9 +148,9 @@ public class StoreTest {
 		int nbPersonBefore;
 		int nbPersonAfter;
 		
-		nbPersonBefore = unionStore.getListPerson().size();
-		unionStore.addPerson(user);
-		nbPersonAfter = unionStore.getListPerson().size();
+		nbPersonBefore = englandStore.getListPerson().size();
+		englandStore.addPerson(user);
+		nbPersonAfter = englandStore.getListPerson().size();
 		
 		if (nbPersonBefore + 1 != nbPersonAfter){
 			System.out.println("nbPersonBefore: " + nbPersonBefore);
@@ -152,9 +158,9 @@ public class StoreTest {
 			fail("StoreTest - testAddPerson KO: user not added");
 		}
 		
-		nbPersonBefore = unionStore.getListPerson().size();
-		unionStore.addPerson(admin);
-		nbPersonAfter = unionStore.getListPerson().size();
+		nbPersonBefore = englandStore.getListPerson().size();
+		englandStore.addPerson(admin);
+		nbPersonAfter = englandStore.getListPerson().size();
 		
 		if (nbPersonBefore + 1 != nbPersonAfter){
 			System.out.println("nbPersonBefore: " + nbPersonBefore);

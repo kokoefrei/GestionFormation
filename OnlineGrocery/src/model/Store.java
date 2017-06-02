@@ -55,7 +55,7 @@ public class Store implements Model{
 		return false;
 	}
 	
-	public void addProductCart(Product p){
+	public void addProductCommand(Product p){
 		command.addProduct(p);
 	}
 	
